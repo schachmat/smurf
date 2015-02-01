@@ -1,0 +1,71 @@
+#include <errno.h>
+#include <pthread.h>
+#include <stdlib.h>
+
+#include "cef/base.h"
+#include "util.h"
+#include "include/capi/cef_base_capi.h"
+
+CEF_CALLBACK void add_ref(struct _cef_base_t* self)
+{
+	struct refcount *r;
+	char *cp;
+
+	cp = (char*)self;
+	cp -= sizeof(struct refcount);
+	r = (struct refcount*)cp;
+
+	if ((errno = pthread_mutex_lock(r->lock))) {
+		eprintf("failed to lock mutex:");
+		return;
+	}
+	r->refs++;
+	if ((errno = pthread_mutex_unlock(r->lock))) {
+		eprintf("failed to unlock mutex:");
+	}
+}
+
+CEF_CALLBACK int release(struct _cef_base_t* self)
+{
+	struct refcount *r;
+	char *cp;
+
+	cp = (char*)self;
+	cp -= sizeof(struct refcount);
+	r = (struct refcount*)cp;
+
+	if ((errno = pthread_mutex_lock(r->lock))) {
+		eprintf("failed to lock mutex:");
+		return 0;
+	}
+	if (0 == --(r->refs)) {
+		pthread_mutex_unlock(r->lock);
+		pthread_mutex_destroy(r->lock);
+		free(r);
+		return 1;
+	}
+	if ((errno = pthread_mutex_unlock(r->lock))) {
+		eprintf("failed to unlock mutex:");
+	}
+	return 0;
+}
+
+CEF_CALLBACK int has_one_ref(struct _cef_base_t* self)
+{
+	struct refcount *r;
+	char *cp;
+
+	cp = (char*)self;
+	cp -= sizeof(struct refcount);
+	r = (struct refcount*)cp;
+
+	return r->refs == 1;
+}
+
+void init_base(struct _cef_base_t* b, size_t sz)
+{
+	b->size = sz;
+	b->add_ref = &add_ref;
+	b->release = &release;
+	b->has_one_ref = &has_one_ref;
+}

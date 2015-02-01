@@ -8,8 +8,8 @@ LIBS = -L/usr/lib -lc -lcef
 CPPFLAGS =
 CFLAGS = -std=c99 -Wall -O0 -g ${INCS} ${CPPFLAGS}
 #CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
-DLDFLAGS = -g -Lbin/debug ${LIBS}
-RLDFLAGS = -s -Lbin/release ${LIBS}
+DLDFLAGS = -g -Wl,-rpath,. -Lbin/debug ${LIBS}
+RLDFLAGS = -s -Wl,-rpath,. -Lbin/release ${LIBS}
 
 # compiler and linker
 CC = cc

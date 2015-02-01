@@ -55,7 +55,12 @@
 #include "include/capi/cef_xml_reader_capi.h"
 #include "include/capi/cef_zip_reader_capi.h"
 
-int main(int argc, char** argv)
+int foo(char* bar)
 {
 	return 0;
+}
+
+int main(int argc, char** argv)
+{
+	return foo("bar");
 }
