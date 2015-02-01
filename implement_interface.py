@@ -142,6 +142,7 @@ class FuncDeclVisitor(c_ast.NodeVisitor):
         fdef = c_ast.FuncDef(decl, None, compound)
 
         self.funs[mfun] = fun
+        # fix const double pointer: https://github.com/eliben/pycparser/issues/68
         self.ret.append(self.gen.visit(fdef).replace('* const ', ' const* '))
 #        fdef.show()
 
