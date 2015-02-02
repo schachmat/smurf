@@ -3,6 +3,10 @@
 
 #include <pthread.h>
 
+// increment/decrement refcounters
+#define RINC(p) ((cef_base_t*)p)->add_ref((cef_base_t*)p)
+#define RDEC(p) ((cef_base_t*)p)->release((cef_base_t*)p)
+
 struct refcount {
 	size_t refs;
 	pthread_mutex_t lock;

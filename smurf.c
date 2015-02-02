@@ -2,16 +2,13 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "gtk.h"
+//#include "gtk.h"
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_client_capi.h"
 
+#include "util.h"
 #include "cef/base.h"
 #include "cef/initializers.h"
-
-// increment/decrement refcounters
-#define RINC(p) ((cef_base_t*)p)->add_ref((cef_base_t*)p)
-#define RDEC(p) ((cef_base_t*)p)->release((cef_base_t*)p)
 
 int main(int argc, char** argv) {
 	int i;
@@ -49,10 +46,10 @@ int main(int argc, char** argv) {
 
 	// Create GTK window. You can pass a NULL handle
 	// to CEF and then it will create a window of its own.
-	initialize_gtk();
-	GtkWidget* hwnd = create_gtk_window("smurf", 1024, 768);
-	cef_window_info_t windowInfo = {};
-	windowInfo.parent_widget = hwnd;
+//	initialize_gtk();
+//	GtkWidget* hwnd = create_gtk_window("smurf", 1024, 768);
+//	cef_window_info_t windowInfo = {};
+//	windowInfo.parent_widget = hwnd;
 
 	// Initial url.
 	char *url = "https://startpage.com/";
@@ -74,7 +71,8 @@ int main(int argc, char** argv) {
 	// Create browser.
 	printf("cef_browser_host_create_browser\n");
 	RINC(client);
-	cef_browser_host_create_browser(&windowInfo, client, &cefUrl, &browserSettings, NULL);
+	cef_browser_host_create_browser(NULL, client, &cefUrl, &browserSettings, NULL);
+//	cef_browser_host_create_browser(&windowInfo, client, &cefUrl, &browserSettings, NULL);
 
 	// Message loop.
 	printf("cef_run_message_loop\n");
