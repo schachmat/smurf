@@ -5,7 +5,7 @@
 
 struct refcount {
 	size_t refs;
-	pthread_mutex_t *lock;
+	pthread_mutex_t lock;
 };
 
 void eprintf(const char *format, ...);

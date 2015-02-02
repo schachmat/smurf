@@ -1,8 +1,8 @@
 # Customize below to fit your system
 
 # includes and libs
-INCS = -I. -I/usr/include
-LIBS = -L/usr/lib -lc -lcef
+INCS = -I. -I/usr/include $(pkg-config --cflags gtk+-2.0)
+LIBS = -L/usr/lib -lc -lcef $(pkg-config --libs gtk+-2.0)
 
 # flags
 CPPFLAGS =

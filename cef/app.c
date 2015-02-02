@@ -49,7 +49,10 @@ struct _cef_app_t *init_app()
 	cp += sizeof(struct refcount);
 	ret = (struct _cef_app_t*)cp;
 
-	init_base((cef_base_t*)ret, sizeof(struct _cef_app_t));
+	if(!init_base((cef_base_t*)ret, sizeof(struct _cef_app_t))) {
+		free(r);
+		return NULL;
+	}
 	ret->base.add_ref((cef_base_t*)ret);
 
 	// callbacks
