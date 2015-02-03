@@ -3,13 +3,13 @@ include config.mk
 SRC = smurf.c                                      \
       util.c                                       \
       cef/app.c                                    \
+      cef/browser_process_handler.c                \
       cef/stubs/allow_certificate_error_callback.c \
       cef/stubs/auth_callback.c                    \
       cef/stubs/before_download_callback.c         \
       cef/stubs/binary_value.c                     \
       cef/stubs/browser.c                          \
       cef/stubs/browser_host.c                     \
-      cef/stubs/browser_process_handler.c          \
       cef/stubs/callback.c                         \
       cef/stubs/client.c                           \
       cef/stubs/command_line.c                     \
@@ -88,6 +88,7 @@ SRC = smurf.c                                      \
       cef/stubs/zip_reader.c                       \
       cef/base.c
 #      cef/stubs/app.c                              \
+#      cef/stubs/browser_process_handler.c          \
 
 OBJ = ${SRC:.c=.o}
 
@@ -104,7 +105,7 @@ options:
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $< -o $@
 
-${OBJ}: config.mk
+${OBJ}: config.mk smurf.h cef/initializers.h cef/base.h
 
 smurf.d: ${OBJ}
 	@echo CC -o bin/debug/$@
@@ -121,6 +122,6 @@ clean:
 run: smurf.r
 	@echo running release version
 	@cd bin/release && ./smurf.r
-	@cd -
+#	@cd -
 
 .PHONY: all options smurf.d smurf.r clean run

@@ -154,8 +154,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit(1)
 
-    fname = sys.argv[1]
-    ast = parse_file("gen.c", use_cpp=True, cpp_args=[r'-Ifake', r'-I.'])
+    ast = parse_file(sys.argv[1], use_cpp=True, cpp_args=[r'-Ifake', r'-I.'])
 
-#    ast.show()
+    ast.show()
     StructVisitor().visit(ast)
