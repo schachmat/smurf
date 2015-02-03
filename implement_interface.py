@@ -6,14 +6,6 @@ from pycparser import parse_file, c_generator, c_ast
 sys.path.extend(['.', '..'])
 
 
-def impl_struct():
-    return True
-
-
-def impl_func():
-    return True
-
-
 class StructVisitor(c_ast.NodeVisitor):
     def visit_Struct(self, node):
         try:
@@ -73,7 +65,6 @@ class StructVisitor(c_ast.NodeVisitor):
 
         with open('cef/stubs/' + sname[5:-2] + '.c', 'w') as fh:
             fh.write('\n'.join(ret).replace('  ', '\t').replace('\n\n\n', '\n\n'))
-#        print('\n'.join(ret).replace('  ', '\t').replace('\n\n\n', '\n\n'))
 
 
 class FuncDeclVisitor(c_ast.NodeVisitor):
@@ -156,5 +147,5 @@ if __name__ == "__main__":
 
     ast = parse_file(sys.argv[1], use_cpp=True, cpp_args=[r'-Ifake', r'-I.'])
 
-    ast.show()
+#    ast.show()
     StructVisitor().visit(ast)
