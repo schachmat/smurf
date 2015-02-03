@@ -105,7 +105,7 @@ options:
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $< -o $@
 
-${OBJ}: config.mk smurf.h cef/initializers.h cef/base.h
+${OBJ}: config.mk smurf.h util.h cef/base.h cef/initializers.h
 
 smurf.d: ${OBJ}
 	@echo CC -o bin/debug/$@
