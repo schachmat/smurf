@@ -1,3 +1,7 @@
+# vim tmp files
 *~
 *.swp
+
+# binary files
 *.o
+*.so
