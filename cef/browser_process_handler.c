@@ -50,10 +50,8 @@ void size_alloc(GtkWidget* widget, GtkAllocation* allocation, void* data) {
 	cef_browser_host_t *h;
 	Window xwin;
 
-	eprintf("resizing");
 	if (c.browser && c.browser->get_host && (h = c.browser->get_host(c.browser))
 		&& h->get_window_handle && (xwin = h->get_window_handle(h))) {
-		eprintf("actually resizing");
 		// Size the browser window to match the GTK widget.
 		XWindowChanges changes = {0};
 		changes.width = allocation->width;
