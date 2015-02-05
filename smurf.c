@@ -13,11 +13,10 @@
 
 
 struct _cef_app_t *app;
-struct _cef_browser_process_handler_t *browserh;
 
 
 int main(int argc, char** argv) {
-	int i;
+//	int i;
 	// Main args.
 	cef_main_args_t mainArgs = {};
 	mainArgs.argc = argc;
@@ -30,9 +29,9 @@ int main(int argc, char** argv) {
 	app = init_app();
 
 	// Execute subprocesses.
-	printf("cef_execute_process, argc=%d\n", argc);
-	for(i = 0; i < argc; i++)
-		printf("arg %d: %s\n", i, argv[i]);
+//	printf("cef_execute_process, argc=%d\n", argc);
+//	for(i = 0; i < argc; i++)
+//		printf("arg %d: %s\n", i, argv[i]);
 	RINC(app);
 	int code = cef_execute_process(&mainArgs, app, NULL);
 	if (code >= 0) {
@@ -46,16 +45,16 @@ int main(int argc, char** argv) {
 //	settings.no_sandbox = 1;
 
 	// Initialize CEF.
-	printf("cef_initialize\n");
+//	printf("cef_initialize\n");
 	RINC(app);
 	cef_initialize(&mainArgs, &settings, app, NULL);
 
 	// Message loop.
-	printf("cef_run_message_loop\n");
+//	printf("cef_run_message_loop\n");
 	cef_run_message_loop();
 
 	// Shutdown CEF.
-	printf("cef_shutdown\n");
+//	printf("cef_shutdown\n");
 	cef_shutdown();
 
 	return 0;

@@ -4,6 +4,7 @@ SRC = smurf.c                                      \
       util.c                                       \
       cef/app.c                                    \
       cef/browser_process_handler.c                \
+      cef/client.c                                 \
       cef/stubs/allow_certificate_error_callback.c \
       cef/stubs/auth_callback.c                    \
       cef/stubs/before_download_callback.c         \
@@ -11,7 +12,6 @@ SRC = smurf.c                                      \
       cef/stubs/browser.c                          \
       cef/stubs/browser_host.c                     \
       cef/stubs/callback.c                         \
-      cef/stubs/client.c                           \
       cef/stubs/command_line.c                     \
       cef/stubs/completion_callback.c              \
       cef/stubs/context_menu_handler.c             \
@@ -39,7 +39,6 @@ SRC = smurf.c                                      \
       cef/stubs/jsdialog_callback.c                \
       cef/stubs/jsdialog_handler.c                 \
       cef/stubs/keyboard_handler.c                 \
-      cef/stubs/life_span_handler.c                \
       cef/stubs/list_value.c                       \
       cef/stubs/load_handler.c                     \
       cef/stubs/menu_model.c                       \
@@ -89,6 +88,8 @@ SRC = smurf.c                                      \
       cef/base.c
 #      cef/stubs/app.c                              \
 #      cef/stubs/browser_process_handler.c          \
+#      cef/stubs/client.c                           \
+#      cef/stubs/life_span_handler.c                \
 
 OBJ = ${SRC:.c=.o}
 
