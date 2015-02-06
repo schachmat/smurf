@@ -46,6 +46,19 @@ void window_destroy_signal(GtkWidget* widget, gpointer data)
 	cef_quit_message_loop();
 }
 
+gboolean window_focus_in(GtkWidget* widget, GdkEventFocus* event, gpointer data)
+{
+	cef_browser_host_t *h;
+	if (event->in && c.browser && c.browser->get_host &&
+		(h = c.browser->get_host(c.browser)) && h->set_focus) {
+		DEBUG_PRINT("setting input focus for real nao");
+		h->set_focus(h, 1);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+
 void size_alloc(GtkWidget* widget, GtkAllocation* allocation, void* data) {
 	cef_browser_host_t *h;
 	Window xwin;
@@ -70,6 +83,7 @@ CEF_CALLBACK void browser_process_handler_on_context_initialized(struct _cef_bro
 	xw.win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size(GTK_WINDOW(xw.win), 800, 600);
 	g_signal_connect(xw.win, "destroy", G_CALLBACK(window_destroy_signal), NULL);
+	g_signal_connect(xw.win, "focus-in-event", G_CALLBACK(window_focus_in), NULL);
 
 	xw.vpan = gtk_vpaned_new();
 	gtk_container_add(GTK_CONTAINER(xw.win), xw.vpan);

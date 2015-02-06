@@ -31,7 +31,6 @@ SRC = smurf.c                                      \
       cef/stubs/drag_handler.c                     \
       cef/stubs/end_tracing_callback.c             \
       cef/stubs/file_dialog_callback.c             \
-      cef/stubs/focus_handler.c                    \
       cef/stubs/frame.c                            \
       cef/stubs/geolocation_callback.c             \
       cef/stubs/geolocation_handler.c              \
@@ -89,6 +88,7 @@ SRC = smurf.c                                      \
 #      cef/stubs/app.c                              \
 #      cef/stubs/browser_process_handler.c          \
 #      cef/stubs/client.c                           \
+#      cef/stubs/focus_handler.c                    \
 #      cef/stubs/life_span_handler.c                \
 
 OBJ = ${SRC:.c=.o}

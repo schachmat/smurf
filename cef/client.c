@@ -1,6 +1,8 @@
 #include <stdlib.h>
+#include <X11/Xlib.h>
 
 #include "include/capi/cef_client_capi.h"
+#include "include/capi/cef_focus_handler_capi.h"
 #include "include/capi/cef_life_span_handler_capi.h"
 
 #include "cef/base.h"
@@ -46,8 +48,15 @@ CEF_CALLBACK struct _cef_drag_handler_t *client_get_drag_handler(struct _cef_cli
 
 CEF_CALLBACK struct _cef_focus_handler_t *client_get_focus_handler(struct _cef_client_t *self)
 {
+	static struct _cef_focus_handler_t *foch = NULL;
+
 	DEBUG_ONCE("client_get_focus_handler() called");
-	return NULL;
+
+	if (!foch)
+		foch = init_focus_handler();
+
+	RINC(foch);
+	return foch;
 }
 
 CEF_CALLBACK struct _cef_geolocation_handler_t *client_get_geolocation_handler(struct _cef_client_t *self)
@@ -148,6 +157,64 @@ struct _cef_client_t *init_client()
 	return ret;
 }
 
+
+/*******************************************************************************
+ * FOCUS HANDLER
+ ******************************************************************************/
+
+CEF_CALLBACK void focus_handler_on_take_focus(struct _cef_focus_handler_t *self, struct _cef_browser_t *browser, int next)
+{
+	DEBUG_ONCE("focus_handler_on_take_focus() called");
+}
+
+CEF_CALLBACK int focus_handler_on_set_focus(struct _cef_focus_handler_t *self, struct _cef_browser_t *browser, cef_focus_source_t source)
+{
+	DEBUG_ONCE("focus_handler_on_set_focus() called");
+	return 0;
+}
+
+CEF_CALLBACK void focus_handler_on_got_focus(struct _cef_focus_handler_t *self, struct _cef_browser_t *browser)
+{
+	cef_browser_host_t *h;
+
+	DEBUG_ONCE("focus_handler_on_got_focus() called");
+
+	if (browser && browser->get_host &&
+		(h = browser->get_host(browser)) && h->set_focus) {
+		h->set_focus(h, 1);
+	}
+}
+
+struct _cef_focus_handler_t *init_focus_handler()
+{
+	struct _cef_focus_handler_t *ret = NULL;
+	struct refcount *r = NULL;
+	char *cp = NULL;
+
+	DEBUG_ONCE("init_focus_handler() called");
+	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_focus_handler_t), 1))) {
+		eprintf("out of memory");
+		return NULL;
+	}
+
+	cp = (char*)r;
+	cp += sizeof(struct refcount);
+	ret = (struct _cef_focus_handler_t*)cp;
+
+	if(!init_base((cef_base_t*)ret, sizeof(struct _cef_focus_handler_t))) {
+		free(r);
+		return NULL;
+	}
+	ret->base.add_ref((cef_base_t*)ret);
+
+	// callbacks
+	ret->on_set_focus = &focus_handler_on_set_focus;
+	ret->on_got_focus = &focus_handler_on_got_focus;
+	ret->on_take_focus = &focus_handler_on_take_focus;
+
+	return ret;
+}
+
 /*******************************************************************************
  * LIFE SPAN HANDLER
  ******************************************************************************/
@@ -161,6 +228,7 @@ CEF_CALLBACK int life_span_handler_on_before_popup(struct _cef_life_span_handler
 CEF_CALLBACK void life_span_handler_on_after_created(struct _cef_life_span_handler_t *self, struct _cef_browser_t *browser)
 {
 	DEBUG_ONCE("life_span_handler_on_after_created() called");
+
 	c.browser = browser;
 }
 
