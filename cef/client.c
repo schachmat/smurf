@@ -3,6 +3,7 @@
 
 #include "include/capi/cef_client_capi.h"
 #include "include/capi/cef_focus_handler_capi.h"
+#include "include/capi/cef_keyboard_handler_capi.h"
 #include "include/capi/cef_life_span_handler_capi.h"
 
 #include "cef/base.h"
@@ -73,8 +74,15 @@ CEF_CALLBACK struct _cef_jsdialog_handler_t *client_get_jsdialog_handler(struct 
 
 CEF_CALLBACK struct _cef_keyboard_handler_t *client_get_keyboard_handler(struct _cef_client_t *self)
 {
+	static struct _cef_keyboard_handler_t *kh = NULL;
+
 	DEBUG_ONCE("client_get_keyboard_handler() called");
-	return NULL;
+
+	if (!kh)
+		kh = init_keyboard_handler();
+
+	RINC(kh);
+	return kh;
 }
 
 CEF_CALLBACK struct _cef_life_span_handler_t *client_get_life_span_handler(struct _cef_client_t *self)
@@ -214,6 +222,55 @@ struct _cef_focus_handler_t *init_focus_handler()
 
 	return ret;
 }
+
+
+/*******************************************************************************
+ * KEYBOARD HANDLER
+ ******************************************************************************/
+
+CEF_CALLBACK int keyboard_handler_on_pre_key_event(struct _cef_keyboard_handler_t *self, struct _cef_browser_t *browser, const struct _cef_key_event_t *event, XEvent *os_event, int *is_keyboard_shortcut)
+{
+//	DEBUG_PRINT("keyboard_handler_on_pre_key_event() called");
+	return 0;
+}
+
+CEF_CALLBACK int keyboard_handler_on_key_event(struct _cef_keyboard_handler_t *self, struct _cef_browser_t *browser, const struct _cef_key_event_t *event, XEvent *os_event)
+{
+//	DEBUG_PRINT("keyboard_handler_on_key_event() called");
+	if (event->focus_on_editable_field && event->type == KEYEVENT_RAWKEYDOWN)
+		eprintf("%d %d", event->modifiers, event->native_key_code);
+	return 0;
+}
+
+struct _cef_keyboard_handler_t *init_keyboard_handler()
+{
+	struct _cef_keyboard_handler_t *ret = NULL;
+	struct refcount *r = NULL;
+	char *cp = NULL;
+
+	DEBUG_ONCE("init_keyboard_handler() called");
+	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_keyboard_handler_t), 1))) {
+		eprintf("out of memory");
+		return NULL;
+	}
+
+	cp = (char*)r;
+	cp += sizeof(struct refcount);
+	ret = (struct _cef_keyboard_handler_t*)cp;
+
+	if(!init_base((cef_base_t*)ret, sizeof(struct _cef_keyboard_handler_t))) {
+		free(r);
+		return NULL;
+	}
+	ret->base.add_ref((cef_base_t*)ret);
+
+	// callbacks
+	ret->on_key_event = &keyboard_handler_on_key_event;
+	ret->on_pre_key_event = &keyboard_handler_on_pre_key_event;
+
+	return ret;
+}
+
 
 /*******************************************************************************
  * LIFE SPAN HANDLER

@@ -37,7 +37,6 @@ SRC = smurf.c                                      \
       cef/stubs/get_geolocation_callback.c         \
       cef/stubs/jsdialog_callback.c                \
       cef/stubs/jsdialog_handler.c                 \
-      cef/stubs/keyboard_handler.c                 \
       cef/stubs/list_value.c                       \
       cef/stubs/load_handler.c                     \
       cef/stubs/menu_model.c                       \
@@ -89,6 +88,7 @@ SRC = smurf.c                                      \
 #      cef/stubs/browser_process_handler.c          \
 #      cef/stubs/client.c                           \
 #      cef/stubs/focus_handler.c                    \
+#      cef/stubs/keyboard_handler.c                 \
 #      cef/stubs/life_span_handler.c                \
 
 OBJ = ${SRC:.c=.o}

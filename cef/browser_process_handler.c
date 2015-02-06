@@ -51,7 +51,6 @@ gboolean window_focus_in(GtkWidget* widget, GdkEventFocus* event, gpointer data)
 	cef_browser_host_t *h;
 	if (event->in && c.browser && c.browser->get_host &&
 		(h = c.browser->get_host(c.browser)) && h->set_focus) {
-		DEBUG_PRINT("setting input focus for real nao");
 		h->set_focus(h, 1);
 		return TRUE;
 	}
