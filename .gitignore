@@ -5,3 +5,8 @@
 # binary files
 *.o
 *.so
+
+# generated files
+config.h
+cscope.out
+needed_includes

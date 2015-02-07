@@ -9,6 +9,7 @@
 #include "include/capi/cef_browser_process_handler_capi.h"
 #include "include/capi/cef_client_capi.h"
 
+#include "config.h"
 #include "smurf.h"
 #include "util.h"
 #include "cef/base.h"
@@ -58,7 +59,8 @@ gboolean window_focus_in(GtkWidget* widget, GdkEventFocus* event, gpointer data)
 }
 
 
-void size_alloc(GtkWidget* widget, GtkAllocation* allocation, void* data) {
+void size_alloc(GtkWidget* widget, GtkAllocation* allocation, void* data)
+{
 	cef_browser_host_t *h;
 	Window xwin;
 
@@ -72,9 +74,27 @@ void size_alloc(GtkWidget* widget, GtkAllocation* allocation, void* data) {
 	}
 }
 
+static gboolean keypress(GtkAccelGroup *group, GObject *obj, guint key, GdkModifierType mods, struct BrowserWin *c)
+{
+	guint i;
+	gboolean processed = FALSE;
+
+	mods = CLEANMASK(mods);
+	key = gdk_keyval_to_lower(key);
+//	updatewinid(c);
+	for (i = 0; i < LENGTH(keys); i++)
+		if (key == keys[i].keyval && mods == keys[i].mod && keys[i].func) {
+			keys[i].func(c, &(keys[i].arg));
+			processed = TRUE;
+		}
+
+	return processed;
+}
+
 CEF_CALLBACK void browser_process_handler_on_context_initialized(struct _cef_browser_process_handler_t *self)
 {
-//	Window parent;
+	int i;
+	GtkAccelGroup *group = gtk_accel_group_new();
 
 	DEBUG_ONCE("browser_process_handler_on_context_initialized() called");
 
@@ -83,6 +103,13 @@ CEF_CALLBACK void browser_process_handler_on_context_initialized(struct _cef_bro
 	gtk_window_set_default_size(GTK_WINDOW(xw.win), 800, 600);
 	g_signal_connect(xw.win, "destroy", G_CALLBACK(window_destroy_signal), NULL);
 	g_signal_connect(xw.win, "focus-in-event", G_CALLBACK(window_focus_in), NULL);
+
+	// add keybindings
+	for(i = 0; i < LENGTH(keys); i++)
+		gtk_accel_group_connect(group, keys[i].keyval, keys[i].mod, 0,
+		                        g_cclosure_new(G_CALLBACK(keypress), &c, NULL));
+	gtk_window_add_accel_group(GTK_WINDOW(xw.win), group);
+
 
 	xw.vpan = gtk_vpaned_new();
 	gtk_container_add(GTK_CONTAINER(xw.win), xw.vpan);
@@ -99,8 +126,6 @@ CEF_CALLBACK void browser_process_handler_on_context_initialized(struct _cef_bro
 
 	cef_window_info_t windowInfo = {};
 	windowInfo.parent_window = GDK_WINDOW_XID(gtk_widget_get_window(xw.view));
-//	windowInfo.parent_window = GDK_WINDOW_XID(xw.win);
-//	windowInfo.parent_window = gtk_socket_get_id(GTK_SOCKET(xw.view));
 
 	// Initial url.
 	char *url = "https://startpage.com/";
