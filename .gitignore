@@ -10,3 +10,6 @@
 config.h
 cscope.out
 needed_includes
+gen.c
+cef/stubs/
+bin/
