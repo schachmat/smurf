@@ -26,6 +26,7 @@ typedef struct {
 } Key;
 
 void eprintf(const char *format, ...);
+void die(const char *msg);
 
 struct BrowserWin c;
 

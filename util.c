@@ -23,3 +23,9 @@ void eprintf(const char *format, ...)
 		fputc('\n', stderr);
 	}
 }
+
+void die(const char *msg)
+{
+	eprintf("%s", msg);
+	exit(1);
+}

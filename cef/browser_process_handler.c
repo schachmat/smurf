@@ -18,7 +18,8 @@
 static struct {
 	Display *dpy;
 	Colormap cmap;
-	GtkWidget* win;
+	Window win;
+//	GtkWidget* win;
 	GtkWidget* vpan;
 	GtkWidget* view;
 	Drawable buf;
@@ -74,17 +75,20 @@ void size_alloc(GtkWidget* widget, GtkAllocation* allocation, void* data)
 	}
 }
 
-static gboolean keypress(GtkAccelGroup *group, GObject *obj, guint key, GdkModifierType mods, struct BrowserWin *c)
+//static gboolean keypress(GtkAccelGroup *group, GObject *obj, guint key, GdkModifierType mods, struct BrowserWin *c)
+static gboolean keypress(GtkWidget *w, GdkEventKey *ev, gpointer *data)
 {
 	guint i;
 	gboolean processed = FALSE;
+	guint key = gdk_keyval_to_lower(ev->keyval);
+	guint mods = CLEANMASK(ev->state);
 
-	mods = CLEANMASK(mods);
-	key = gdk_keyval_to_lower(key);
 //	updatewinid(c);
+	eprintf("key %d pressed, state %d", key, mods);
+	return FALSE;
 	for (i = 0; i < LENGTH(keys); i++)
 		if (key == keys[i].keyval && mods == keys[i].mod && keys[i].func) {
-			keys[i].func(c, &(keys[i].arg));
+			keys[i].func(&c, &(keys[i].arg));
 			processed = TRUE;
 		}
 
@@ -98,34 +102,64 @@ CEF_CALLBACK void browser_process_handler_on_context_initialized(struct _cef_bro
 
 	DEBUG_ONCE("browser_process_handler_on_context_initialized() called");
 
-	gtk_init(0, NULL);
-	xw.win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_default_size(GTK_WINDOW(xw.win), 800, 600);
-	g_signal_connect(xw.win, "destroy", G_CALLBACK(window_destroy_signal), NULL);
-	g_signal_connect(xw.win, "focus-in-event", G_CALLBACK(window_focus_in), NULL);
+//	gtk_init(0, NULL);
+//	xw.win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+//	gtk_window_set_default_size(GTK_WINDOW(xw.win), 800, 600);
+///	gdk_window_set_events(gtk_widget_get_window(GTK_WIDGET(xw.win)), GDK_BUTTON_PRESS_MASK);
+//	g_signal_connect(xw.win, "destroy", G_CALLBACK(window_destroy_signal), NULL);
+//	g_signal_connect(xw.win, "focus-in-event", G_CALLBACK(window_focus_in), NULL);
+//
+///	// add keybindings
+///	for(i = 0; i < LENGTH(keys); i++)
+///		gtk_accel_group_connect(group, keys[i].keyval, keys[i].mod, 0,
+///		                        g_cclosure_new(G_CALLBACK(keypress), &c, NULL));
+///	gtk_window_add_accel_group(GTK_WINDOW(xw.win), group);
+//
+//
+//	xw.vpan = gtk_vpaned_new();
+//	gtk_container_add(GTK_CONTAINER(xw.win), xw.vpan);
+//	g_signal_connect(xw.vpan, "size-allocate", G_CALLBACK(size_alloc), NULL);
+//
+//	xw.view = gtk_drawing_area_new();
+//	gtk_paned_pack1(GTK_PANED(xw.vpan), xw.view, TRUE, TRUE);
+//	g_signal_connect(xw.view, "key-press-event", G_CALLBACK(keypress), NULL);
 
-	// add keybindings
-	for(i = 0; i < LENGTH(keys); i++)
-		gtk_accel_group_connect(group, keys[i].keyval, keys[i].mod, 0,
-		                        g_cclosure_new(G_CALLBACK(keypress), &c, NULL));
-	gtk_window_add_accel_group(GTK_WINDOW(xw.win), group);
 
+///	g_signal_connect(G_OBJECT(xw.win), "delete_event", G_CALLBACK(delete_event), xw.win);
 
-	xw.vpan = gtk_vpaned_new();
-	gtk_container_add(GTK_CONTAINER(xw.win), xw.vpan);
-	g_signal_connect(xw.vpan, "size-allocate", G_CALLBACK(size_alloc), NULL);
+//	gtk_widget_show_all(GTK_WIDGET(xw.win));
 
-	xw.view = gtk_drawing_area_new();
-	gtk_paned_pack1(GTK_PANED(xw.vpan), xw.view, TRUE, TRUE);
+	if(!(xw.dpy = XOpenDisplay(NULL)))
+		die("Can't open display\n");
+	xw.scr = XDefaultScreen(xw.dpy);
+	xw.vis = XDefaultVisual(xw.dpy, xw.scr);
 
+	/* adjust fixed window geometry */
+	xw.w = 800;
+	xw.h = 600;
+	xw.l = 0;
+	xw.t = 0;
 
-//	g_signal_connect(G_OBJECT(xw.win), "delete_event", G_CALLBACK(delete_event), xw.win);
+	/* Events */
+	xw.attrs.bit_gravity = NorthWestGravity;
+	xw.attrs.event_mask = FocusChangeMask | KeyPressMask
+		| ExposureMask | VisibilityChangeMask | StructureNotifyMask
+		| ButtonMotionMask | ButtonPressMask | ButtonReleaseMask;
 
-	gtk_widget_show_all(GTK_WIDGET(xw.win));
+//	if (!(opt_embed && (parent = strtol(opt_embed, NULL, 0))))
+//		parent = XRootWindow(xw.dpy, xw.scr);
+//	xw.win = XCreateWindow(xw.dpy, parent, xw.l, xw.t,
+	xw.win = XCreateWindow(xw.dpy, XRootWindow(xw.dpy, xw.scr), xw.l, xw.t,
+			xw.w, xw.h, 0, XDefaultDepth(xw.dpy, xw.scr), InputOutput,
+			xw.vis, CWBackPixel | CWBorderPixel | CWBitGravity
+			| CWEventMask | CWColormap, &xw.attrs);
 
+	XMapWindow(xw.dpy, xw.win);
+	XSync(xw.dpy, False);
 
 	cef_window_info_t windowInfo = {};
-	windowInfo.parent_window = GDK_WINDOW_XID(gtk_widget_get_window(xw.view));
+//	windowInfo.parent_window = GDK_WINDOW_XID(gtk_widget_get_window(xw.view));
+	windowInfo.parent_window = xw.win;
 
 	// Initial url.
 	char *url = "https://startpage.com/";
