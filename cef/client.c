@@ -10,12 +10,18 @@
 #include "cef/initializers.h"
 #include "util.h"
 
-// TODO: use one instance per window
-struct BrowserWin c;
-
 /*******************************************************************************
  * CLIENT
  ******************************************************************************/
+
+struct Client *client_parent(struct _cef_client_t *self)
+{
+	struct Client *c;
+	for (c = clients; c; c = c->next)
+		if (c->client == self)
+			return c;
+	return NULL;
+}
 
 CEF_CALLBACK struct _cef_context_menu_handler_t *client_get_context_menu_handler(struct _cef_client_t *self)
 {
@@ -87,15 +93,18 @@ CEF_CALLBACK struct _cef_keyboard_handler_t *client_get_keyboard_handler(struct 
 
 CEF_CALLBACK struct _cef_life_span_handler_t *client_get_life_span_handler(struct _cef_client_t *self)
 {
-	static struct _cef_life_span_handler_t *lsh = NULL;
+	struct Client *c;
 
 	DEBUG_ONCE("client_get_life_span_handler() called");
 
-	if (!lsh)
-		lsh = init_life_span_handler();
+	if (!(c = client_parent(self)))
+		return NULL;
 
-	RINC(lsh);
-	return lsh;
+	if (!c->lsh)
+		c->lsh = init_life_span_handler();
+
+	RINC(c->lsh);
+	return c->lsh;
 }
 
 CEF_CALLBACK struct _cef_load_handler_t *client_get_load_handler(struct _cef_client_t *self)
@@ -276,6 +285,15 @@ struct _cef_keyboard_handler_t *init_keyboard_handler()
  * LIFE SPAN HANDLER
  ******************************************************************************/
 
+struct Client *life_span_handler_parent(struct _cef_life_span_handler_t *self)
+{
+	struct Client *c;
+	for (c = clients; c; c = c->next)
+		if (c->lsh == self)
+			return c;
+	return NULL;
+}
+
 CEF_CALLBACK int life_span_handler_on_before_popup(struct _cef_life_span_handler_t *self, struct _cef_browser_t *browser, struct _cef_frame_t *frame, const cef_string_t *target_url, const cef_string_t *target_frame_name, const struct _cef_popup_features_t *popupFeatures, struct _cef_window_info_t *windowInfo, struct _cef_client_t **client, struct _cef_browser_settings_t *settings, int *no_javascript_access)
 {
 	DEBUG_ONCE("life_span_handler_on_before_popup() called");
@@ -284,9 +302,17 @@ CEF_CALLBACK int life_span_handler_on_before_popup(struct _cef_life_span_handler
 
 CEF_CALLBACK void life_span_handler_on_after_created(struct _cef_life_span_handler_t *self, struct _cef_browser_t *browser)
 {
+	struct Client *c;
 	DEBUG_ONCE("life_span_handler_on_after_created() called");
 
-	c.browser = browser;
+	if ((c = life_span_handler_parent(self))) {
+		c->browser = browser;
+		if (browser && browser->get_host) {
+			c->host = browser->get_host(browser);
+			if (c->host && c->host->get_window_handle)
+				c->cwin = c->host->get_window_handle(c->host);
+		}
+	}
 }
 
 CEF_CALLBACK int life_span_handler_run_modal(struct _cef_life_span_handler_t *self, struct _cef_browser_t *browser)
