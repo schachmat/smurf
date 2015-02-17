@@ -35,8 +35,8 @@ static void configurenotify(struct Client *c, const XEvent *e)
 	const XConfigureEvent *ev = &e->xconfigure;
 	XWindowChanges changes = {0};
 
-	if (ev->window == c->win && c && c->host && c->host->notify_move_or_resize_started) {
-//		c->host->notify_move_or_resize_started(c->host);
+	if (ev->window == c->win && c->cwin && c->host && c->host->notify_move_or_resize_started) {
+		c->host->notify_move_or_resize_started(c->host);
 		changes.width = ev->width;
 		changes.height = ev->height;
 		XConfigureWindow(c->dpy, c->cwin, CWHeight | CWWidth, &changes);
