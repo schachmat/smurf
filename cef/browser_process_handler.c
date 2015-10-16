@@ -6,6 +6,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_browser_process_handler_capi.h"
@@ -127,6 +128,11 @@ static void *runx(void *arg)
 						   c->vis, CWEventMask, &c->attrs);
 
 	eprintf("WINID: %d", c->win);
+
+	// request the window closed message so we can exit the thread
+	Atom wm_delete_window = XInternAtom(c->dpy, "WM_DELETE_WINDOW", False);
+	XSetWMProtocols(c->dpy, c->win, &wm_delete_window, 1);
+
 	XMapWindow(c->dpy, c->win);
 	XSync(c->dpy, False);
 
@@ -142,10 +148,21 @@ static void *runx(void *arg)
 	int running = 1;
 	while(running) {
 		XNextEvent(c->dpy, &ev);
-		if(handler[ev.type])
-			(handler[ev.type])(c, &ev);
-	}
 
+		// eprintf("event WINID: %d, %d", c->win, ev.type);
+		if(handler[ev.type]) {
+			(handler[ev.type])(c, &ev);
+		}
+		if (ev.type == ClientMessage && ev.xclient.data.l[0] == wm_delete_window) {
+			DEBUG_PRINT("destroying window");
+
+			XDestroyWindow(c->dpy, c->win);
+			running = 0;
+		}
+	}
+	DEBUG_PRINT("exiting X event loop");
+
+	XCloseDisplay(c->dpy);
 	return NULL;
 }
 

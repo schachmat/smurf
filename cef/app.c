@@ -57,7 +57,7 @@ struct _cef_app_t *init_app()
 	struct refcount *r = NULL;
 	char *cp = NULL;
 
-	DEBUG_ONCE("init_app() called");
+	DEBUG_ONCE("app.c::init_app() called");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_app_t), 1))) {
 		eprintf("out of memory");
 		return NULL;
