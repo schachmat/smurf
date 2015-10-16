@@ -5,7 +5,6 @@ SRC = smurf.c                                      \
       cef/app.c                                    \
       cef/browser_process_handler.c                \
       cef/client.c                                 \
-      cef/stubs/allow_certificate_error_callback.c \
       cef/stubs/auth_callback.c                    \
       cef/stubs/before_download_callback.c         \
       cef/stubs/binary_value.c                     \
@@ -49,7 +48,6 @@ SRC = smurf.c                                      \
       cef/stubs/print_job_callback.c               \
       cef/stubs/print_settings.c                   \
       cef/stubs/process_message.c                  \
-      cef/stubs/quota_callback.c                   \
       cef/stubs/read_handler.c                     \
       cef/stubs/render_handler.c                   \
       cef/stubs/render_process_handler.c           \
