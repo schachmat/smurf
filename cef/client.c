@@ -294,16 +294,20 @@ struct Client *life_span_handler_parent(struct _cef_life_span_handler_t *self)
 	return NULL;
 }
 
-CEF_CALLBACK int life_span_handler_on_before_popup(struct _cef_life_span_handler_t *self, struct _cef_browser_t *browser, struct _cef_frame_t *frame, const cef_string_t *target_url, const cef_string_t *target_frame_name, const struct _cef_popup_features_t *popupFeatures, struct _cef_window_info_t *windowInfo, struct _cef_client_t **client, struct _cef_browser_settings_t *settings, int *no_javascript_access)
+
+CEF_CALLBACK int life_span_handler_on_before_popup(struct _cef_life_span_handler_t* self, struct _cef_browser_t* browser, struct _cef_frame_t* frame, const cef_string_t* target_url, const cef_string_t* target_frame_name, cef_window_open_disposition_t target_disposition, int user_gesture, const struct _cef_popup_features_t* popupFeatures, struct _cef_window_info_t* windowInfo, struct _cef_client_t** client, struct _cef_browser_settings_t* settings, int* no_javascript_access)
 {
 	DEBUG_ONCE("life_span_handler_on_before_popup() called");
 	return 0;
 }
 
+int g_browserInstances = 0;
 CEF_CALLBACK void life_span_handler_on_after_created(struct _cef_life_span_handler_t *self, struct _cef_browser_t *browser)
 {
 	struct Client *c;
-	DEBUG_ONCE("life_span_handler_on_after_created() called");
+
+	++g_browserInstances;
+	eprintf("life_span_handler_on_after_created() called, %d instances\n", g_browserInstances);
 
 	if ((c = life_span_handler_parent(self))) {
 		c->browser = browser;
@@ -323,13 +327,20 @@ CEF_CALLBACK int life_span_handler_run_modal(struct _cef_life_span_handler_t *se
 
 CEF_CALLBACK int life_span_handler_do_close(struct _cef_life_span_handler_t *self, struct _cef_browser_t *browser)
 {
-	DEBUG_ONCE("life_span_handler_do_close() called");
 	return 0;
 }
 
 CEF_CALLBACK void life_span_handler_on_before_close(struct _cef_life_span_handler_t *self, struct _cef_browser_t *browser)
 {
 	DEBUG_ONCE("life_span_handler_on_before_close() called");
+
+	--g_browserInstances;
+	eprintf("%d instances\n", g_browserInstances);
+
+	if (g_browserInstances == 0) {
+		DEBUG_PRINT("stopping cef message loop");
+		cef_quit_message_loop();
+	}
 }
 
 struct _cef_life_span_handler_t *init_life_span_handler()

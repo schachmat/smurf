@@ -45,8 +45,8 @@ void die(const char *msg);
 
 struct Client *clients;
 
-#define DEBUG_ONCE(str) do{ static int first_call = 1; if (first_call) { first_call = 0; eprintf("%d: debug_once: %s", getpid(), str); } }while(0)
-#define DEBUG_PRINT(str) do{ eprintf("%d: debug: %s", getpid(), str); }while(0)
+#define DEBUG_ONCE(str) do{ static int first_call = 1; if (first_call) { first_call = 0; eprintf("%05d: %s", getpid(), str); } }while(0)
+#define DEBUG_PRINT(str) do{ eprintf("%05d: %s", getpid(), str); }while(0)
 #define LENGTH(x) (sizeof x / sizeof x[0])
 #define CLEANMASK(mask)         (mask & (MODKEY|GDK_SHIFT_MASK))
 

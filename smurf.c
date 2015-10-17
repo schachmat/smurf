@@ -25,14 +25,17 @@ int main(int argc, char** argv) {
 	// cef_app_t structure must be filled. It must implement
 	// reference counting. You cannot pass a structure
 	// initialized with zeroes.
+	DEBUG_PRINT("smurf::main(), init_app");
 	app = init_app();
 
 	// Execute subprocesses.
 	RINC(app);
 	int code = cef_execute_process(&mainArgs, app, NULL);
 	if (code >= 0) {
+		DEBUG_PRINT("cef_execute_process > 0, EXITING");
 		return code;
 	}
+	DEBUG_PRINT("cef_execute_process RETURNED, initializing CEF");
 
 	// Application settings.
 	// It is mandatory to set the "size" member.
@@ -46,11 +49,11 @@ int main(int argc, char** argv) {
 	cef_initialize(&mainArgs, &settings, app, NULL);
 
 	// Message loop.
-//	DEBUG_ONCE("CEF_RUN_MESSAGE_LOOP");
+	DEBUG_ONCE("cef_run_message_loop");
 	cef_run_message_loop();
 
 	// Shutdown CEF.
-//	printf("cef_shutdown\n");
+	printf("cef_shutdown\n");
 	cef_shutdown();
 
 	return 0;
