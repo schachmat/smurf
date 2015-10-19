@@ -42,7 +42,7 @@ class StructVisitor(c_ast.NodeVisitor):
         ret.append('\tstruct refcount *r = NULL;')
         ret.append('\tchar *cp = NULL;')
         ret.append('')
-        ret.append('\tDEBUG_ONCE("init_' + sname[5:-2] + '() called");')
+        ret.append('\tDEBUG_ONCE("called");')
         ret.append('\tif (!(r = calloc(sizeof(struct refcount) + sizeof(struct ' + sname + '), 1))) {')
         ret.append('\t\teprintf("out of memory");')
         ret.append('\t\treturn NULL;')
@@ -89,7 +89,7 @@ class FuncDeclVisitor(c_ast.NodeVisitor):
             fun = self.sname + mfun
             node.type.type.declname = fun
             rett = None
-        param = c_ast.Constant("string", '"' + fun + '() called"')
+        param = c_ast.Constant("string", '""')
         elist = c_ast.ExprList([param])
         call = c_ast.FuncCall(c_ast.ID('DEBUG_ONCE'), elist)
 

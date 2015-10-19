@@ -45,8 +45,8 @@ void die(const char *msg);
 
 struct Client *clients;
 
-#define DEBUG_ONCE(str) do{ static int first_call = 1; if (first_call) { first_call = 0; eprintf("%05d: %s", getpid(), str); } }while(0)
-#define DEBUG_PRINT(str) do{ eprintf("%05d: %s", getpid(), str); }while(0)
+#define DEBUG_ONCE(str, args...) do{ static int first_call = 1; if (first_call) { first_call = 0; eprintf("[%05d:%08x](%s:%d)%s(): "str, getpid(), pthread_self(), __FILE__, __LINE__, __func__, ##args); } }while(0)
+#define DEBUG_PRINT(str, args...) eprintf("[%05d:%08x](%s:%d)%s(): "str, getpid(), pthread_self(), __FILE__, __LINE__, __func__, ##args);
 #define LENGTH(x) (sizeof x / sizeof x[0])
 #define CLEANMASK(mask)         (mask & (MODKEY|GDK_SHIFT_MASK))
 

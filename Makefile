@@ -122,9 +122,8 @@ clean:
 	@echo cleaning
 	@rm -f smurf ${OBJ}
 
-run: smurf.r
-	@echo running release version
-	@cd bin/release && ./smurf.r
-#	@cd -
+run: smurf.d
+	@echo running debug version
+	@bin/debug/smurf.d
 
 .PHONY: all options smurf.d smurf.r clean run

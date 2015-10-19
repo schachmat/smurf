@@ -7,13 +7,13 @@
 
 CEF_CALLBACK int resource_bundle_handler_get_localized_string(struct _cef_resource_bundle_handler_t *self, int message_id, cef_string_t *string)
 {
-	DEBUG_ONCE("resource_bundle_handler_get_localized_string() called");
+	DEBUG_ONCE("");
 	return 0;
 }
 
 CEF_CALLBACK int resource_bundle_handler_get_data_resource(struct _cef_resource_bundle_handler_t *self, int resource_id, void **data, size_t *data_size)
 {
-	DEBUG_ONCE("resource_bundle_handler_get_data_resource() called");
+	DEBUG_ONCE("");
 	return 0;
 }
 
@@ -23,7 +23,7 @@ struct _cef_resource_bundle_handler_t *init_resource_bundle_handler()
 	struct refcount *r = NULL;
 	char *cp = NULL;
 
-	DEBUG_ONCE("init_resource_bundle_handler() called");
+	DEBUG_ONCE("");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_resource_bundle_handler_t), 1))) {
 		eprintf("out of memory");
 		return NULL;

@@ -16,6 +16,10 @@ struct _cef_app_t *app;
 
 
 int main(int argc, char** argv) {
+	DEBUG_PRINT("----------------- NEW PROCESS -------------------");
+	for (int i = 0; i < argc; ++i) {
+		DEBUG_PRINT("%s ", argv[i]);
+	}
 	cef_main_args_t mainArgs = {};
 
 	mainArgs.argc = argc;
@@ -25,7 +29,6 @@ int main(int argc, char** argv) {
 	// cef_app_t structure must be filled. It must implement
 	// reference counting. You cannot pass a structure
 	// initialized with zeroes.
-	DEBUG_PRINT("smurf::main(), init_app");
 	app = init_app();
 
 	// Execute subprocesses.
