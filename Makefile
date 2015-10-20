@@ -1,10 +1,17 @@
 include config.mk
 
+# to add your own functionality:
+#   1) copy the auto-generated interface implementation in cef/stubs to cef/
+#   2) comment out the auto-generated one and add a line below to have it build in cef/
+#   3) modify the source to taste
+
 SRC = smurf.c                                      \
       util.c                                       \
       cef/app.c                                    \
       cef/browser_process_handler.c                \
       cef/client.c                                 \
+      cef/render_process_handler.c                 \
+      cef/v8handler.c                              \
       cef/stubs/auth_callback.c                    \
       cef/stubs/before_download_callback.c         \
       cef/stubs/binary_value.c                     \
@@ -50,7 +57,6 @@ SRC = smurf.c                                      \
       cef/stubs/process_message.c                  \
       cef/stubs/read_handler.c                     \
       cef/stubs/render_handler.c                   \
-      cef/stubs/render_process_handler.c           \
       cef/stubs/request.c                          \
       cef/stubs/request_context.c                  \
       cef/stubs/request_context_handler.c          \
@@ -71,7 +77,6 @@ SRC = smurf.c                                      \
       cef/stubs/v8accessor.c                       \
       cef/stubs/v8context.c                        \
       cef/stubs/v8exception.c                      \
-      cef/stubs/v8handler.c                        \
       cef/stubs/v8stack_frame.c                    \
       cef/stubs/v8stack_trace.c                    \
       cef/stubs/v8value.c                          \
@@ -88,6 +93,8 @@ SRC = smurf.c                                      \
 #      cef/stubs/focus_handler.c                    \
 #      cef/stubs/keyboard_handler.c                 \
 #      cef/stubs/life_span_handler.c                \
+#      cef/stubs/render_process_handler.c           \
+#      cef/stubs/v8handler.c                        \
 
 OBJ = ${SRC:.c=.o}
 

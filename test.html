@@ -4,17 +4,19 @@
 Here is the test page.  CEF looks good so far...
 
 <br/>
+<input type="button" value="reload" onclick="location.reload()"/>
 <input type="button" value="test" onclick="onClick()"/>
-
 <br/>
 Output:
 <div id="output">
 </div>
 </body>
+
 <script type="text/javascript">
 function onClick()
 {
-	output.innerText = "here";
+	output.innerText = window.cefQuery;
 }
 </script>
+
 </html>
