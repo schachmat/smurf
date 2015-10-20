@@ -5,7 +5,7 @@ Here is the test page.  CEF looks good so far...
 
 <br/>
 <input type="button" value="reload" onclick="location.reload()"/>
-<input type="button" value="call injectedFunc" onclick="window.injectedFunc('hello native implementation');"/>
+<input type="button" value="call injectedFunc" onclick="callInjectedFunc()"/>
 <br/>
 Output:
 <div id="output">
@@ -13,9 +13,9 @@ Output:
 </body>
 
 <script type="text/javascript">
-function onClick()
+function callInjectedFunc()
 {
-	output.innerText = window.cefQuery;
+	output.innerText = "injected func returns: " + window.injectedFunc("hello", "from", "javascript");
 }
 </script>
 
