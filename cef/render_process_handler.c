@@ -57,18 +57,19 @@ CEF_CALLBACK void render_process_handler_on_context_created(
 
 	// create a V8 function
 	const char functionName[] = INJECTED_JS_FUNCTION_NAME;
-	cef_string_t cefFunctionName = {};
-	cef_string_from_ascii(functionName, strlen(functionName), &cefFunctionName);
+	cef_string_userfree_t cefFunctionName = cef_string_userfree_alloc();
+	cef_string_from_ascii(functionName, strlen(functionName), cefFunctionName);
 
-	struct _cef_v8value_t* const function = cef_v8value_create_function(&cefFunctionName, handler);
+	struct _cef_v8value_t* const function = cef_v8value_create_function(cefFunctionName, handler);
 
 	// attach it to the window object
 	struct _cef_v8value_t* const windowObject = context->get_global(context);
-	windowObject->set_value_bykey(windowObject, &cefFunctionName, function, V8_PROPERTY_ATTRIBUTE_NONE);
+	windowObject->set_value_bykey(windowObject, cefFunctionName, function, V8_PROPERTY_ATTRIBUTE_NONE);
 
-	//KAI: call string destructor for cefFunctionName?
+	cef_string_userfree_free(cefFunctionName);
+
 	//KAI: release any other references like windowObject?
-	//KAI: use RINC, RDEC, examples in app.c
+	//KAI: use RINC, RDEC, examples in app.c?
 }
 
 CEF_CALLBACK void render_process_handler_on_context_released(struct _cef_render_process_handler_t *self, struct _cef_browser_t *browser, struct _cef_frame_t *frame, struct _cef_v8context_t *context)

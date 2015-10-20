@@ -19,10 +19,33 @@ CEF_CALLBACK int v8handler_execute(
 	struct _cef_v8value_t **retval, 
 	cef_string_t *exception)
 {
-	DEBUG_PRINT("received V8 call");
+	DEBUG_PRINT("received a V8 call");
 
-	// get the function name
+	const char functionName[] = INJECTED_JS_FUNCTION_NAME;
+	cef_string_userfree_t cefFunctionName = cef_string_userfree_alloc();
+	cef_string_from_ascii(functionName, strlen(functionName), cefFunctionName);
 
+	if (cef_string_utf16_cmp(cefFunctionName, name) == 0) {
+
+		DEBUG_PRINT("found our function "INJECTED_JS_FUNCTION_NAME", %d arguments ", argumentsCount);
+		for (int i = 0; i < argumentsCount; ++i) {
+
+			struct _cef_v8value_t* const argValue = arguments[i];
+
+			cef_string_userfree_t strValue = argValue->get_string_value(argValue);
+
+			cef_string_userfree_utf8_t strValue_utf8 = cef_string_userfree_utf8_alloc();
+			cef_string_utf16_to_utf8(strValue->str, strValue->length, strValue_utf8);
+
+			DEBUG_PRINT("string: %s", strValue_utf8->str);
+
+			cef_string_userfree_free(strValue);
+			cef_string_userfree_utf8_free(strValue_utf8);
+		}
+	}
+	cef_string_userfree_free(cefFunctionName);
+
+	//KAI: fill in retval - have to increment its refcount?
 
 
 	//KAI: clean up all references
