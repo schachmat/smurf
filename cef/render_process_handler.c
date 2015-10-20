@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "include/capi/cef_render_process_handler_capi.h"
+#include "include/capi/cef_v8_capi.h"
 
 #include "cef/base.h"
 #include "util.h"
@@ -41,9 +42,17 @@ CEF_CALLBACK int render_process_handler_on_before_navigation(struct _cef_render_
 	return 0;
 }
 
-CEF_CALLBACK void render_process_handler_on_context_created(struct _cef_render_process_handler_t *self, struct _cef_browser_t *browser, struct _cef_frame_t *frame, struct _cef_v8context_t *context)
+CEF_CALLBACK void render_process_handler_on_context_created(
+	struct _cef_render_process_handler_t *self, 
+	struct _cef_browser_t *browser, 
+	struct _cef_frame_t *frame, 
+	struct _cef_v8context_t *context)
 {
-	DEBUG_ONCE("");
+	DEBUG_PRINT("creating a v8handler");
+
+	// KAI: what reference counting needs to be managed here?
+
+	// context->get_global();
 }
 
 CEF_CALLBACK void render_process_handler_on_context_released(struct _cef_render_process_handler_t *self, struct _cef_browser_t *browser, struct _cef_frame_t *frame, struct _cef_v8context_t *context)
@@ -75,7 +84,7 @@ struct _cef_render_process_handler_t *init_render_process_handler()
 
 	DEBUG_ONCE("called");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_render_process_handler_t), 1))) {
-		eprintf("out of memory");
+		DEBUG_PRINT("#### out of memory! #####");;
 		return NULL;
 	}
 

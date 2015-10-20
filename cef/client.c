@@ -141,7 +141,7 @@ struct _cef_client_t *init_client()
 
 	DEBUG_ONCE("init_client()");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_client_t), 1))) {
-		eprintf("out of memory");
+		DEBUG_PRINT("#### out of memory! #####");;
 		return NULL;
 	}
 
@@ -210,7 +210,7 @@ struct _cef_focus_handler_t *init_focus_handler()
 
 	DEBUG_ONCE("");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_focus_handler_t), 1))) {
-		eprintf("out of memory");
+		DEBUG_PRINT("#### out of memory! #####");;
 		return NULL;
 	}
 
@@ -246,8 +246,9 @@ CEF_CALLBACK int keyboard_handler_on_pre_key_event(struct _cef_keyboard_handler_
 CEF_CALLBACK int keyboard_handler_on_key_event(struct _cef_keyboard_handler_t *self, struct _cef_browser_t *browser, const struct _cef_key_event_t *event, XEvent *os_event)
 {
 //	DEBUG_PRINT("keyboard_handler_on_key_event()");
-	if (event->focus_on_editable_field && event->type == KEYEVENT_RAWKEYDOWN)
-		eprintf("%d %d", event->modifiers, event->native_key_code);
+	if (event->focus_on_editable_field && event->type == KEYEVENT_RAWKEYDOWN) {
+		DEBUG_PRINT("%d %d", event->modifiers, event->native_key_code);
+	}
 	return 0;
 }
 
@@ -259,7 +260,7 @@ struct _cef_keyboard_handler_t *init_keyboard_handler()
 
 	DEBUG_ONCE("");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_keyboard_handler_t), 1))) {
-		eprintf("out of memory");
+		DEBUG_PRINT("out of memory");
 		return NULL;
 	}
 
@@ -351,7 +352,7 @@ struct _cef_life_span_handler_t *init_life_span_handler()
 
 	DEBUG_ONCE("");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_life_span_handler_t), 1))) {
-		eprintf("out of memory");
+		DEBUG_PRINT("#### out of memory! #####");;
 		return NULL;
 	}
 

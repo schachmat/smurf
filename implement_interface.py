@@ -44,7 +44,7 @@ class StructVisitor(c_ast.NodeVisitor):
         ret.append('')
         ret.append('\tDEBUG_ONCE("called");')
         ret.append('\tif (!(r = calloc(sizeof(struct refcount) + sizeof(struct ' + sname + '), 1))) {')
-        ret.append('\t\teprintf("out of memory");')
+        ret.append('\t\tDEBUG_PRINT("#### out of memory! #####");')
         ret.append('\t\treturn NULL;')
         ret.append('\t}')
         ret.append('')

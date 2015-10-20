@@ -25,7 +25,7 @@ struct _cef_resource_bundle_handler_t *init_resource_bundle_handler()
 
 	DEBUG_ONCE("");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_resource_bundle_handler_t), 1))) {
-		eprintf("out of memory");
+		DEBUG_PRINT("#### out of memory! #####");;
 		return NULL;
 	}
 

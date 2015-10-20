@@ -59,7 +59,7 @@ struct _cef_app_t *init_app()
 
 	DEBUG_ONCE("");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_app_t), 1))) {
-		eprintf("out of memory");
+		DEBUG_PRINT("#### out of memory! #####");;
 		return NULL;
 	}
 

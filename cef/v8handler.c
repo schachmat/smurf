@@ -27,7 +27,7 @@ struct _cef_v8handler_t *init_v8handler()
 
 	DEBUG_ONCE("called");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_v8handler_t), 1))) {
-		eprintf("out of memory");
+		DEBUG_PRINT("#### out of memory! #####");;
 		return NULL;
 	}
 
