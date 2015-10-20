@@ -1,9 +1,9 @@
 include config.mk
 
-# to add your own functionality:
-#   1) copy the auto-generated interface implementation in cef/stubs to cef/
-#   2) comment out the auto-generated one and add a line below to have it build in cef/
-#   3) modify the source to taste
+# to implement an interface:
+#   1) copy the auto-generated interface implementation from cef/stubs to cef/
+#   2) below, modify the SRC variable to compile the copied file
+#   3) you probably want to add the init_*() constructor function for the implementation to initializers.h
 
 SRC = smurf.c                                      \
       util.c                                       \

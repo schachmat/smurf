@@ -141,7 +141,7 @@ CEF_CALLBACK void browser_process_handler_on_context_initialized(struct _cef_bro
 {
 	struct Client *c;
 
-	DEBUG_ONCE("browser_process_handler_on_context_initialized()");
+	DEBUG_ONCE("");
 
 	if (!(c = calloc(sizeof(struct Client), 1))) {
 		eprintf("calloc failed:");

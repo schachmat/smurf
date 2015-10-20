@@ -27,6 +27,8 @@ struct Client {
 	struct Client *next;
 };
 
+#define INJECTED_JS_FUNCTION_NAME "injectedFunc"
+
 typedef union {
 	gboolean b;
 	gint i;

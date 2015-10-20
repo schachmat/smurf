@@ -3,11 +3,13 @@
  *********************************************************/
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "include/capi/cef_render_process_handler_capi.h"
 #include "include/capi/cef_v8_capi.h"
 
 #include "cef/base.h"
+#include "cef/initializers.h"
 #include "util.h"
 
 CEF_CALLBACK void render_process_handler_on_render_thread_created(struct _cef_render_process_handler_t *self, struct _cef_list_value_t *extra_info)
@@ -48,11 +50,25 @@ CEF_CALLBACK void render_process_handler_on_context_created(
 	struct _cef_frame_t *frame, 
 	struct _cef_v8context_t *context)
 {
-	DEBUG_PRINT("creating a v8handler");
+	DEBUG_PRINT("creating a v8handler for "INJECTED_JS_FUNCTION_NAME);
 
-	// KAI: what reference counting needs to be managed here?
+	// create a V8 handler
+	struct _cef_v8handler_t* const handler = init_v8handler();
 
-	// context->get_global();
+	// create a V8 function
+	const char functionName[] = INJECTED_JS_FUNCTION_NAME;
+	cef_string_t cefFunctionName = {};
+	cef_string_from_ascii(functionName, strlen(functionName), &cefFunctionName);
+
+	struct _cef_v8value_t* const function = cef_v8value_create_function(&cefFunctionName, handler);
+
+	// attach it to the window object
+	struct _cef_v8value_t* const windowObject = context->get_global(context);
+	windowObject->set_value_bykey(windowObject, &cefFunctionName, function, V8_PROPERTY_ATTRIBUTE_NONE);
+
+	//KAI: call string destructor for cefFunctionName?
+	//KAI: release any other references like windowObject?
+	//KAI: use RINC, RDEC, examples in app.c
 }
 
 CEF_CALLBACK void render_process_handler_on_context_released(struct _cef_render_process_handler_t *self, struct _cef_browser_t *browser, struct _cef_frame_t *frame, struct _cef_v8context_t *context)

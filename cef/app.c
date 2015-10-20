@@ -48,7 +48,13 @@ CEF_CALLBACK struct _cef_browser_process_handler_t *app_get_browser_process_hand
 CEF_CALLBACK struct _cef_render_process_handler_t *app_get_render_process_handler(struct _cef_app_t *self)
 {
 	DEBUG_ONCE("");
-	return NULL;
+	static struct _cef_render_process_handler_t* handler = NULL;
+
+	if (!handler) {
+		handler = init_render_process_handler();
+	}
+	RINC(handler);
+	return handler;
 }
 
 struct _cef_app_t *init_app()

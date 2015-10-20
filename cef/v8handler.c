@@ -3,20 +3,30 @@
  *********************************************************/
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "include/capi/cef_v8_capi.h"
 
 #include "cef/base.h"
 #include "util.h"
 
-CEF_CALLBACK int v8handler_execute(struct _cef_v8handler_t *self, const cef_string_t *name, struct _cef_v8value_t *object, size_t argumentsCount, struct _cef_v8value_t * const* arguments, struct _cef_v8value_t **retval, cef_string_t *exception)
+CEF_CALLBACK int v8handler_execute(
+	struct _cef_v8handler_t *self, 
+	const cef_string_t *name, 
+	struct _cef_v8value_t *object, 
+	size_t argumentsCount, 
+	struct _cef_v8value_t * const* arguments, 
+	struct _cef_v8value_t **retval, 
+	cef_string_t *exception)
 {
-	DEBUG_ONCE("");
+	DEBUG_PRINT("received V8 call");
 
-	//KAI: pull out the function arguments
+	// get the function name
 
-	//KAI: send them to the browser process, and get them to the correct thread
-	return 0;
+
+
+	//KAI: clean up all references
+	return 1;
 }
 
 struct _cef_v8handler_t *init_v8handler()

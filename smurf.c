@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 		DEBUG_PRINT("cef_execute_process > 0, EXITING");
 		return code;
 	}
-	DEBUG_PRINT("cef_execute_process RETURNED, initializing CEF");
+	DEBUG_PRINT("cef_execute_process RETURNED 0, this is the BROWSER process, running CEF message loop");
 
 	// Application settings.
 	// It is mandatory to set the "size" member.
