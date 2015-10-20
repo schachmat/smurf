@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <unistd.h>
 #include <errno.h>
 
 #include <gtk/gtk.h>
@@ -61,7 +62,14 @@ static void *runx(void *arg)
 {
 	struct Client *c = (struct Client*)arg;
 	cef_window_info_t windowInfo = {};
-	char *url = "https://startpage.com/";
+
+	char path[FILENAME_MAX] = "";
+	getcwd(path, LENGTH(path));
+
+	char url[FILENAME_MAX] = "file://";
+	strcat(url, path);
+	strcat(url, "/test.html");
+
 	cef_string_t cefUrl = {};
 	cef_browser_settings_t browserSettings = {.size = sizeof(cef_browser_settings_t)};
 	XEvent ev;
