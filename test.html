@@ -1,7 +1,7 @@
 <html>
 <body>
 
-Here is the test page.  CEF looks good so far...
+Here is the test page.  Drag window to make javascript call from host browser process...
 
 <br/>
 <input type="button" value="reload" onclick="location.reload()"/>
@@ -16,6 +16,11 @@ Output:
 function callInjectedFunc()
 {
 	output.innerText = "injected func returns: " + window.injectedFunc("hello", "from", "javascript");
+}
+function callFromHost()
+{
+	var args = Array.prototype.slice.call(arguments, 0);
+	output.innerText = "called from host browser process with args: " + args.join(",");
 }
 </script>
 

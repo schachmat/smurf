@@ -116,6 +116,8 @@ static void *runx(void *arg)
 
 	DEBUG_PRINT("browser creation requested");
 
+	static int dumbCounter = 0;
+
 	int running = 1;
 	while(running) {
 		XNextEvent(c->dpy, &ev);
@@ -123,6 +125,25 @@ static void *runx(void *arg)
 		DEBUG_PRINT("event WINID: %d, %d", c->win, ev.type);
 		if(handler[ev.type]) {
 			(handler[ev.type])(c, &ev);
+		}
+		if (ev.type == 22) {
+			// not sure what this is, but I'm using it to try running some javascript
+			if (++dumbCounter == 20) {
+				struct _cef_frame_t* const mainFrame = c->browser->get_main_frame(c->browser);
+
+				DEBUG_PRINT("MAINFRAME PTR------------------ %d", mainFrame);
+
+				const char szJS[] = "callFromHost('one', 'two', 'three');";
+				cef_string_userfree_t js = cef_string_userfree_alloc();
+				cef_string_from_ascii(szJS, strlen(szJS), js);
+
+				mainFrame->execute_java_script(mainFrame, js, 0, 0);
+
+				cef_string_userfree_free(js);
+
+				//KAI: this correct?
+				RDEC(mainFrame);
+			}
 		}
 		if (ev.type == ClientMessage && ev.xclient.data.l[0] == wm_delete_window) {
 			DEBUG_PRINT("destroying window");
