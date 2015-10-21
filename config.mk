@@ -1,8 +1,8 @@
 # Customize below to fit your system
 
 # includes and libs
-INCS = -I. -I/usr/include -I/usr/X11R6/include
-LIBS = -L. -L/usr/lib -L/usr/X11R6/lib -lcef -lc -lX11
+INCS = -I. -I/usr/include -I/usr/X11/include
+LIBS = -L. -L/usr/lib -lcef -lc -lX11
 
 # flags
 CFLAGS = -std=c99 -Wall -O0 -g -pthread ${INCS}
