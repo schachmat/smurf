@@ -2,7 +2,6 @@
 
 #include "include/capi/cef_app_capi.h"
 
-#include "smurf.h"
 #include "cef/base.h"
 #include "cef/initializers.h"
 #include "util.h"

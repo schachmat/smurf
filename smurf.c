@@ -6,7 +6,6 @@
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_client_capi.h"
 
-#include "smurf.h"
 #include "util.h"
 #include "cef/base.h"
 #include "cef/initializers.h"

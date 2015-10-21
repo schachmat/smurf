@@ -112,7 +112,7 @@ options:
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $< -o $@
 
-${OBJ}: config.h config.mk smurf.h util.h cef/base.h cef/initializers.h
+${OBJ}: config.h config.mk util.h cef/base.h cef/initializers.h
 
 config.h:
 	@echo creating $@ from config.def.h
