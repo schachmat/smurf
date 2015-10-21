@@ -129,6 +129,7 @@ smurf.r: ${OBJ}
 clean:
 	@echo cleaning
 	@rm -f smurf ${OBJ}
+	@rm -f cef/stubs/*.o
 
 run: smurf.d
 	@echo running debug version
