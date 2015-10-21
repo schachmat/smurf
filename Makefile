@@ -5,6 +5,7 @@ include config.mk
 #   2) below, modify the SRC variable to compile the copied file
 #   3) you probably want to add the init_*() constructor function for the implementation to initializers.h
 
+# not all of these are necessary or being used, they're simply not linked to the build in those cases (i.e. browser.c)
 SRC = smurf.c                                      \
       util.c                                       \
       cef/app.c                                    \
@@ -15,7 +16,6 @@ SRC = smurf.c                                      \
       cef/stubs/auth_callback.c                    \
       cef/stubs/before_download_callback.c         \
       cef/stubs/binary_value.c                     \
-      cef/stubs/browser.c                          \
       cef/stubs/browser_host.c                     \
       cef/stubs/callback.c                         \
       cef/stubs/command_line.c                     \
@@ -88,6 +88,7 @@ SRC = smurf.c                                      \
       cef/stubs/zip_reader.c                       \
       cef/base.c
 #      cef/stubs/app.c                              \
+      # cef/stubs/browser.c                          \
 #      cef/stubs/browser_process_handler.c          \
 #      cef/stubs/client.c                           \
 #      cef/stubs/focus_handler.c                    \
