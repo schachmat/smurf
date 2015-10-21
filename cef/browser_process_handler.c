@@ -1,13 +1,14 @@
 #include <stdlib.h>
+
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <errno.h>
 
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+
+#include <linux/limits.h>
 
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_browser_process_handler_capi.h"
@@ -46,27 +47,15 @@ static void configurenotify(struct Client *c, const XEvent *e)
 	}
 }
 
-void app_terminate_signal(int signal)
-{
-	DEBUG_PRINT("");
-	cef_quit_message_loop();
-}
-
-void window_destroy_signal(GtkWidget* widget, gpointer data)
-{
-	DEBUG_PRINT("");
-	cef_quit_message_loop();
-}
-
 static void *runx(void *arg)
 {
 	struct Client *c = (struct Client*)arg;
 	cef_window_info_t windowInfo = {};
 
-	char path[FILENAME_MAX] = "";
+	char path[PATH_MAX] = "";
 	getcwd(path, LENGTH(path));
 
-	char url[FILENAME_MAX] = "file://";
+	char url[PATH_MAX] = "file://";
 	strcat(url, path);
 	strcat(url, "/test.html");
 

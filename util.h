@@ -6,7 +6,6 @@
 #include <pthread.h>
 
 #include <X11/Xlib.h>
-#include <gtk/gtk.h>
 
 #include "include/capi/cef_browser_capi.h"
 #include "include/capi/cef_client_capi.h"
@@ -28,19 +27,6 @@ struct Client {
 };
 
 #define INJECTED_JS_FUNCTION_NAME "injectedFunc"
-
-typedef union {
-	gboolean b;
-	gint i;
-	const void *v;
-} Arg;
-
-typedef struct {
-	guint mod;
-	guint keyval;
-	void (*func)(struct Client *c, const Arg *arg);
-	const Arg arg;
-} Key;
 
 void eprintf(const char *format, ...);
 void die(const char *msg);
