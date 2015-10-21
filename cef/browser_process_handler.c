@@ -19,9 +19,9 @@
 #include "cef/base.h"
 #include "cef/initializers.h"
 
-static void configurenotify(struct Client *c, const XEvent *e);
+extern struct Client* client_list;
 
-struct Client *clients = NULL;
+static void configurenotify(struct Client *c, const XEvent *e);
 
 static void (*handler[LASTEvent]) (struct Client *, const XEvent *) = {
 //	[ClientMessage] = clientmessage,
@@ -156,8 +156,8 @@ CEF_CALLBACK void browser_process_handler_on_context_initialized(struct _cef_bro
 		return;
 	}
 
-	c->next = clients;
-	clients = c;
+	c->next = client_list;
+	client_list = c;
 
 	if (0 != (errno = pthread_create(&c->thread, NULL, &runx, (void*)c))) {
 		eprintf("pthread_create failed:");

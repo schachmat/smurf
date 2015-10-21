@@ -13,11 +13,12 @@
 /*******************************************************************************
  * CLIENT
  ******************************************************************************/
+struct Client *client_list;
 
 struct Client *client_parent(struct _cef_client_t *self)
 {
 	struct Client *c;
-	for (c = clients; c; c = c->next)
+	for (c = client_list; c; c = c->next)
 		if (c->client == self)
 			return c;
 	return NULL;
@@ -289,7 +290,7 @@ struct _cef_keyboard_handler_t *init_keyboard_handler()
 struct Client *life_span_handler_parent(struct _cef_life_span_handler_t *self)
 {
 	struct Client *c;
-	for (c = clients; c; c = c->next)
+	for (c = client_list; c; c = c->next)
 		if (c->lsh == self)
 			return c;
 	return NULL;
