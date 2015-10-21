@@ -15,7 +15,6 @@
 #include "include/capi/cef_client_capi.h"
 #include "include/capi/cef_frame_capi.h"
 
-#include "config.h"
 #include "util.h"
 #include "cef/base.h"
 #include "cef/initializers.h"
