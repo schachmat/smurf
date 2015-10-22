@@ -47,6 +47,8 @@ static void configurenotify(struct Client *c, const XEvent *e)
 
 static void *runx(void *arg)
 {
+	DEBUG_PRINT("------------ starting X handling thread --------------");
+
 	struct Client *c = (struct Client*)arg;
 	cef_window_info_t windowInfo = {};
 
@@ -57,11 +59,11 @@ static void *runx(void *arg)
 	strcat(url, path);
 	strcat(url, "/test.html");
 
+	DEBUG_PRINT("loading url %s", url);
+	
 	cef_string_t cefUrl = {};
 	cef_browser_settings_t browserSettings = {.size = sizeof(cef_browser_settings_t)};
 	XEvent ev;
-
-	DEBUG_PRINT("------------ starting X handling thread --------------");
 
 	if (!(c->dpy = XOpenDisplay(NULL)))
 		die("Can't open display\n");

@@ -233,56 +233,6 @@ struct _cef_focus_handler_t *init_focus_handler()
 	return ret;
 }
 
-
-/*******************************************************************************
- * KEYBOARD HANDLER
- ******************************************************************************/
-
-CEF_CALLBACK int keyboard_handler_on_pre_key_event(struct _cef_keyboard_handler_t *self, struct _cef_browser_t *browser, const struct _cef_key_event_t *event, XEvent *os_event, int *is_keyboard_shortcut)
-{
-//	DEBUG_PRINT("keyboard_handler_on_pre_key_event()");
-	return 0;
-}
-
-CEF_CALLBACK int keyboard_handler_on_key_event(struct _cef_keyboard_handler_t *self, struct _cef_browser_t *browser, const struct _cef_key_event_t *event, XEvent *os_event)
-{
-//	DEBUG_PRINT("keyboard_handler_on_key_event()");
-	if (event->focus_on_editable_field && event->type == KEYEVENT_RAWKEYDOWN) {
-		DEBUG_PRINT("%d %d", event->modifiers, event->native_key_code);
-	}
-	return 0;
-}
-
-struct _cef_keyboard_handler_t *init_keyboard_handler()
-{
-	struct _cef_keyboard_handler_t *ret = NULL;
-	struct refcount *r = NULL;
-	char *cp = NULL;
-
-	DEBUG_ONCE("");
-	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_keyboard_handler_t), 1))) {
-		DEBUG_PRINT("out of memory");
-		return NULL;
-	}
-
-	cp = (char*)r;
-	cp += sizeof(struct refcount);
-	ret = (struct _cef_keyboard_handler_t*)cp;
-
-	if(!init_base((cef_base_t*)ret, sizeof(struct _cef_keyboard_handler_t))) {
-		free(r);
-		return NULL;
-	}
-	ret->base.add_ref((cef_base_t*)ret);
-
-	// callbacks
-	ret->on_key_event = &keyboard_handler_on_key_event;
-	ret->on_pre_key_event = &keyboard_handler_on_pre_key_event;
-
-	return ret;
-}
-
-
 /*******************************************************************************
  * LIFE SPAN HANDLER
  ******************************************************************************/

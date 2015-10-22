@@ -12,6 +12,7 @@ SRC = smurf.c                                      \
       cef/base.c                                   \
       cef/browser_process_handler.c                \
       cef/client.c                                 \
+      cef/keyboard_handler.c                       \
       cef/render_process_handler.c                 \
       cef/v8handler.c                              \
       cef/stubs/resource_bundle_handler.c          \
@@ -92,7 +93,6 @@ SRC = smurf.c                                      \
      # cef/stubs/browser_process_handler.c          \
      # cef/stubs/client.c                           \
      # cef/stubs/focus_handler.c                    \
-     # cef/stubs/keyboard_handler.c                 \
      # cef/stubs/life_span_handler.c                \
      # cef/stubs/render_process_handler.c           \
      # cef/stubs/v8handler.c                        \
