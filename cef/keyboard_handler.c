@@ -13,7 +13,7 @@ CEF_CALLBACK int keyboard_handler_on_pre_key_event(struct _cef_keyboard_handler_
 {
 	static const char* const eventNames[] = {"RAWKEYDOWN", "KEYDOWN", "KEYUP", "CHAR"}; 
 
-	DEBUG_PRINT("pre key event: %11s, char %c(%c), modifiers 0x%08X, native keycode %d, system key: %d, edit field %d",
+	DEBUG_PRINT("pre key event: %11s, char %c(%c), modifiers 0x%08X, native keycode %3d, system key: %3d, edit field %d",
 		event->type < LENGTH(eventNames) ? eventNames[event->type] : "UNKNOWN", 
 		event->character,
 		event->unmodified_character,

@@ -19,9 +19,9 @@
 #include "cef/base.h"
 #include "cef/initializers.h"
 
-extern struct Client* client_list;
-
 static void configurenotify(struct Client *c, const XEvent *e);
+
+extern struct Client* client_list;
 
 static void (*handler[LASTEvent]) (struct Client *, const XEvent *) = {
 //	[ClientMessage] = clientmessage,

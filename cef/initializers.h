@@ -7,6 +7,7 @@
 struct _cef_app_t *init_app();
 struct _cef_client_t *init_client();
 struct _cef_browser_process_handler_t *init_browser_process_handler();
+struct _cef_load_handler_t *init_load_handler();
 struct _cef_render_process_handler_t *init_render_process_handler();
 struct _cef_resource_bundle_handler_t *init_resource_bundle_handler();
 struct _cef_focus_handler_t *init_focus_handler();

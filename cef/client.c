@@ -111,7 +111,13 @@ CEF_CALLBACK struct _cef_life_span_handler_t *client_get_life_span_handler(struc
 CEF_CALLBACK struct _cef_load_handler_t *client_get_load_handler(struct _cef_client_t *self)
 {
 	DEBUG_ONCE("");
-	return NULL;
+	static struct _cef_load_handler_t* handler = NULL;
+
+	if (!handler) {
+		handler = init_load_handler();
+	}
+	RINC(handler);
+	return handler;
 }
 
 CEF_CALLBACK struct _cef_render_handler_t *client_get_render_handler(struct _cef_client_t *self)
