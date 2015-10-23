@@ -1,11 +1,13 @@
 <html>
 <body>
 
-Here is the test page.  Drag window to make javascript call from host browser process...
+Here is the test page.  
+<br/>
+Type "go" to invoke the javascript function from native code.
 
 <br/>
 <input type="button" value="reload" onclick="location.reload()"/>
-<input type="button" value="call injectedFunc" onclick="callInjectedFunc()"/>
+<input type="button" value="call native code" onclick="callToNative()"/>
 <br/>
 Output:
 <div id="output">
@@ -13,14 +15,14 @@ Output:
 </body>
 
 <script type="text/javascript">
-function callInjectedFunc()
+function callToNative()
 {
-	output.innerText = "injected func returns: " + window.injectedFunc("hello", "from", "javascript");
+	output.innerText = "native function returns: " + window.nativeFunction("hello", "from", "JAVASCRIPT");
 }
-function callFromHost()
+function callFromNative()
 {
 	var args = Array.prototype.slice.call(arguments, 0);
-	output.innerText = "called from host browser process with args: " + args.join(",");
+	output.innerText = "native code called javascript context with args: " + args.join(",");
 }
 </script>
 

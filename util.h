@@ -26,7 +26,7 @@ struct Client {
 	struct Client *next;
 };
 
-#define INJECTED_JS_FUNCTION_NAME "injectedFunc"
+#define INJECTED_JS_FUNCTION_NAME "nativeFunction"
 
 void eprintf(const char *format, ...);
 void die(const char *msg);
