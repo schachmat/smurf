@@ -2,20 +2,19 @@
 
 #include "include/capi/cef_app_capi.h"
 
-#include "smurf.h"
 #include "cef/base.h"
 #include "cef/initializers.h"
 #include "util.h"
 
 CEF_CALLBACK void app_on_before_command_line_processing(struct _cef_app_t *self, const cef_string_t *process_type, struct _cef_command_line_t *command_line)
 {
-	DEBUG_ONCE("app_on_before_command_line_processing() called");
+	DEBUG_ONCE("");
 	RDEC(command_line);
 }
 
 CEF_CALLBACK void app_on_register_custom_schemes(struct _cef_app_t *self, struct _cef_scheme_registrar_t *registrar)
 {
-	DEBUG_ONCE("app_on_register_custom_schemes() called");
+	DEBUG_ONCE("");
 	RDEC(registrar);
 }
 
@@ -23,7 +22,7 @@ CEF_CALLBACK struct _cef_resource_bundle_handler_t *app_get_resource_bundle_hand
 {
 	static struct _cef_resource_bundle_handler_t *resh = NULL;
 
-	DEBUG_ONCE("app_get_resource_bundle_handler() called");
+	DEBUG_ONCE("");
 
 	if (!resh)
 		resh = init_resource_bundle_handler();
@@ -36,7 +35,7 @@ CEF_CALLBACK struct _cef_browser_process_handler_t *app_get_browser_process_hand
 {
 	static struct _cef_browser_process_handler_t *browserh = NULL;
 
-	DEBUG_ONCE("app_get_browser_process_handler() called");
+	DEBUG_ONCE("");
 
 	if (!browserh)
 		browserh = init_browser_process_handler();
@@ -47,8 +46,14 @@ CEF_CALLBACK struct _cef_browser_process_handler_t *app_get_browser_process_hand
 
 CEF_CALLBACK struct _cef_render_process_handler_t *app_get_render_process_handler(struct _cef_app_t *self)
 {
-	DEBUG_ONCE("app_get_render_process_handler() called");
-	return NULL;
+	DEBUG_ONCE("");
+	static struct _cef_render_process_handler_t* handler = NULL;
+
+	if (!handler) {
+		handler = init_render_process_handler();
+	}
+	RINC(handler);
+	return handler;
 }
 
 struct _cef_app_t *init_app()
@@ -57,9 +62,9 @@ struct _cef_app_t *init_app()
 	struct refcount *r = NULL;
 	char *cp = NULL;
 
-	DEBUG_ONCE("init_app() called");
+	DEBUG_ONCE("");
 	if (!(r = calloc(sizeof(struct refcount) + sizeof(struct _cef_app_t), 1))) {
-		eprintf("out of memory");
+		DEBUG_PRINT("#### out of memory! #####");;
 		return NULL;
 	}
 

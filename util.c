@@ -10,8 +10,6 @@ void eprintf(const char *format, ...)
 {
 	va_list ap;
 
-	fputs("smurf: ", stderr);
-
 	va_start(ap, format);
 	vfprintf(stderr, format, ap);
 	va_end(ap);

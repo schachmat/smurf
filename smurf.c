@@ -6,16 +6,16 @@
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_client_capi.h"
 
-#include "smurf.h"
 #include "util.h"
 #include "cef/base.h"
 #include "cef/initializers.h"
 
-
-struct _cef_app_t *app;
-
-
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
+	DEBUG_PRINT("----------------- NEW PROCESS -------------------");
+	for (int i = 0; i < argc; ++i) {
+		DEBUG_PRINT("%s ", argv[i]);
+	}
 	cef_main_args_t mainArgs = {};
 
 	mainArgs.argc = argc;
@@ -25,14 +25,16 @@ int main(int argc, char** argv) {
 	// cef_app_t structure must be filled. It must implement
 	// reference counting. You cannot pass a structure
 	// initialized with zeroes.
-	app = init_app();
+	struct _cef_app_t* const app = init_app();
 
 	// Execute subprocesses.
 	RINC(app);
 	int code = cef_execute_process(&mainArgs, app, NULL);
 	if (code >= 0) {
+		DEBUG_PRINT("-------- cef_execute_process > 0, EXITING");
 		return code;
 	}
+	DEBUG_PRINT("-------- cef_execute_process RETURNED 0, this is the BROWSER process, running CEF message loop");
 
 	// Application settings.
 	// It is mandatory to set the "size" member.
@@ -46,12 +48,12 @@ int main(int argc, char** argv) {
 	cef_initialize(&mainArgs, &settings, app, NULL);
 
 	// Message loop.
-//	DEBUG_ONCE("CEF_RUN_MESSAGE_LOOP");
+	DEBUG_PRINT("-------- cef_run_message_loop");
 	cef_run_message_loop();
 
 	// Shutdown CEF.
-//	printf("cef_shutdown\n");
+	DEBUG_PRINT("----------------- cef_shutdown -----------------");
 	cef_shutdown();
-
+	DEBUG_PRINT("----------------- cef_shutdown returned --------");
 	return 0;
 }

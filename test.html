@@ -1,0 +1,32 @@
+<html>
+<body>
+
+Here is the test page.  
+<hr/>
+Type "go" to invoke the javascript function from native code.
+
+<br/>
+<input type="button" value="reload" onclick="location.reload()"/>
+<input type="button" value="call native code" onclick="callToNative()"/>
+<br/>
+
+Output:
+<div id="output">
+</div>
+<hr/>
+<a href="http://www.google.com">Google</a>
+</body>
+
+<script type="text/javascript">
+function callToNative()
+{
+	output.innerText = "native function returns: " + window.nativeFunction("hello", "from", "JAVASCRIPT");
+}
+function callFromNative()
+{
+	var args = Array.prototype.slice.call(arguments, 0);
+	output.innerText = "native code called javascript context with args: " + args.join(",");
+}
+</script>
+
+</html>

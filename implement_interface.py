@@ -42,9 +42,9 @@ class StructVisitor(c_ast.NodeVisitor):
         ret.append('\tstruct refcount *r = NULL;')
         ret.append('\tchar *cp = NULL;')
         ret.append('')
-        ret.append('\tDEBUG_ONCE("init_' + sname[5:-2] + '() called");')
+        ret.append('\tDEBUG_ONCE("called");')
         ret.append('\tif (!(r = calloc(sizeof(struct refcount) + sizeof(struct ' + sname + '), 1))) {')
-        ret.append('\t\teprintf("out of memory");')
+        ret.append('\t\tDEBUG_PRINT("#### out of memory! #####");')
         ret.append('\t\treturn NULL;')
         ret.append('\t}')
         ret.append('')
@@ -89,7 +89,7 @@ class FuncDeclVisitor(c_ast.NodeVisitor):
             fun = self.sname + mfun
             node.type.type.declname = fun
             rett = None
-        param = c_ast.Constant("string", '"' + fun + '() called"')
+        param = c_ast.Constant("string", '""')
         elist = c_ast.ExprList([param])
         call = c_ast.FuncCall(c_ast.ID('DEBUG_ONCE'), elist)
 
@@ -100,8 +100,10 @@ class FuncDeclVisitor(c_ast.NodeVisitor):
             'int32': c_ast.Constant("int", "0"),
             'int64': c_ast.Constant("int", "0"),
             'uint32': c_ast.Constant("int", "0"),
+            'uint64': c_ast.Constant("int", "0"),
             'size_t': c_ast.Constant("int", "0"),
             'double': c_ast.Constant("int", "0"),
+            'long': c_ast.Constant("int", "0"),
             'unsigned long': c_ast.Constant("int", "0"),
             # Enums...
             'cef_color_model_t': c_ast.Constant("int", "0"),
@@ -116,12 +118,15 @@ class FuncDeclVisitor(c_ast.NodeVisitor):
             'cef_menu_item_type_t': c_ast.Constant("int", "0"),
             'cef_postdataelement_type_t': c_ast.Constant("int", "0"),
             'cef_resource_type_t': c_ast.Constant("int", "0"),
+            'cef_return_value_t': c_ast.Constant("int", "0"),
             'cef_transition_type_t': c_ast.Constant("int", "0"),
             'cef_urlrequest_status_t': c_ast.Constant("int", "0"),
             'cef_value_type_t': c_ast.Constant("int", "0"),
             'cef_xml_node_type_t': c_ast.Constant("int", "0"),
             # special cases...
             'time_t': c_ast.Constant("int", "0"),
+            'cef_point_t': c_ast.Constant("Struct", "(cef_point_t){}"),
+            'cef_size_t': c_ast.Constant("Struct", "(cef_size_t){}"),
             'cef_time_t': c_ast.Constant("Struct", "(cef_time_t){}"),
             'cef_string_userfree_t': c_ast.Constant("Ptr", "NULL"),
             None: c_ast.Constant("Ptr", "NULL"),
